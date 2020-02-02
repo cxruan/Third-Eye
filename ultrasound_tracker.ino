@@ -21,21 +21,21 @@ void loop() {
 }
 
 
-void sensor() { //loop from the sensor code is renamed to the "sensor" void
+void sensor() { //loop 
   info = Serial.read();
   int duration, distance;    //Adding duration and distance
   if (info != old_info) {
     myservo.write(info);                  // sets the servo position according to the scaled value
     delayMicroseconds(300);
-    digitalWrite(triggerPin, HIGH); //triggering the wave(like blinking an LED)
+    digitalWrite(triggerPin, HIGH); //triggering the wave
     delayMicroseconds(200);
     digitalWrite(triggerPin, LOW);
-    duration = pulseIn(echoPin, HIGH); //a special function for listening and waiting for the wave
+    duration = pulseIn(echoPin, HIGH); 
     distance = (duration / 2) / 29.1; 
     Serial.print(distance); 
     Serial.print('cm'); 
     Serial.print('\n'); 
-    myservo.write(info);
+    myservo.write(0);    // returns servo to zero
     delayMicroseconds(300);
     old_info = info;
   }

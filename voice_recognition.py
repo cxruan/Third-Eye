@@ -1,10 +1,8 @@
 import speech_recognition as sr
 
-# labels of the pretrained data set
-LABELS = ['person', 'bottle']
 
 # obtain audio from the microphone
-def voice_recognition():
+def voice_recognition(labels):
     r = sr.Recognizer()
     with sr.Microphone(device_index=0) as source:
         print("Speak the object")
@@ -18,8 +16,8 @@ def voice_recognition():
         if res:
             words = map(lambda f: f['transcript'], res['alternative'] )
             for word in words:
-                if word in LABELS:
-                    print("Google Speech Recognition think you said: %s", word)
+                if word in labels:
+                    print("Google Speech Recognition think you said: %s" % word)
                     return word
             print("Google Speech Recognition results don't match data set labels")
         else:

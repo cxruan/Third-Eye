@@ -46,6 +46,8 @@ The best solution of this device is to use 2 cameras and calculate the distance 
 ### Lack of compiled OpenAL binaries
 Unfortunately, OpenAL doesn't provide binaries for platforms other than Windows.
 
+### Hard to achieve agreement on the projec
+
 ## Accomplishments that we're proud of
 We have a clear distribution of work that focuses on each team member's strength.
 

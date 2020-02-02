@@ -1,1 +1,5 @@
 *.code-workspace
+venv/
+temp_audio/
+models/
+__pycache__/s

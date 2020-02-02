@@ -20,16 +20,36 @@ https://alwaysai.co/
 We start from the realtime object detector starter-app provided and add the logic we needed on top of that. To improve the performance of the device, we changed the NN model used to another pre-trained model found on Always AI's website that utilizes a training set with more available tags.
 
 ### Text-to-speech
-The prototype utilizes the Google Text-to-Speech python library to generate the sound reponse.
-
-### Speech Recognition
+The prototype utilizes the Google Text-to-Speech python library to generate the sound reponse in '.mp3' version.
+https://pypi.org/project/gTTS/
+The '.mp3' file is then turned into '.wav' file via the pydub library for playing.
+https://pypi.org/project/pydub/
 
 ### Sytereophonic Sound Rendering
+The original sound is played with OpenAL via python binding library PyOpenAL.
+https://pypi.org/project/PyOpenAL/
+The volume is manipulated with the position fed by the computer vision module. The distance of the object is approximated with the inverse square root of the object box's area.
+
+### Speech Recognition
+The keyword in search mode is captured with the python library provided by the Google Cloud Speech APL. The recording is later transferred to the cloud for speech recognition.
+https://cloud.google.com/speech-to-text/
 
 ## Challenges we ran into
+
+### Time Constraint
+The time of the hackathon is limited so we have to take many options of expediency, they directly led to many of the other challenges we met.
+
+### Unable to detect the accurate distance
+The best solution of this device is to use 2 cameras and calculate the distance of objects via parallex effect. However, to make a quick prototype, we have to accomadate the pre-trained models we were provided.
+
+### Incompatibility of 
 
 ## Accomplishments that we're proud of
 
 ## What we learned
 
 ## What's next for Third Eye
+We would first switch to a device with dual-camera. A new Neural Network will be trained from scratch with the data collected or hopefully with new training sets found online.
+More computation should be transferred to the cloud for better performance and less burden to the edge devices.
+A localized version of language recognition logic would be provided as alternative so that object detection may be provided even when being unable to connect to the Internet.
+A sonar may be added to the device as well, providing supplemental object detect support in dark environment.

@@ -21,8 +21,8 @@ https://dashboard.alwaysai.co/docs/application_development/changing_the_engine_a
 """
 
 os.environ["PYAL_DLL_PATH"] = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC"
-empty_image_path = "C:\\Users\\Yichi Yang\\Documents\\Others\\HackSC\\HackSC-2020\\realtime_object_detector\\empty.png"
-help_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\realtime_object_detector\\audio\\help.mp3"
+empty_image_path = "C:\\Users\\Yichi Yang\\Documents\\Others\\HackSC\\HackSC-2020\\empty.png"
+help_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\audio\\help.mp3"
 
 help_audio = AudioSegment.from_mp3(help_path) - 20
 

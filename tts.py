@@ -10,8 +10,8 @@ import math
 from pydub.playback import play
 from pydub import AudioSegment
 
-temp_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\realtime_object_detector\\temp_audio"
-audio_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\realtime_object_detector\\audio"
+temp_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\temp_audio"
+audio_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\audio"
 
 not_found = AudioSegment.from_mp3(os.path.join(audio_path, "404.mp3")) - 20
 

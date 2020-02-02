@@ -5,7 +5,7 @@ from pydub import AudioSegment
 # labels of the pretrained data set
 LABELS = ['person', 'bottle']
 
-beep_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\realtime_object_detector\\audio\\beep-06.wav"
+beep_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\audio\\beep-06.wav"
 beep = AudioSegment.from_wav(beep_path) - 24
 
 # obtain audio from the microphone

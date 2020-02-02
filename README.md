@@ -22,6 +22,7 @@ We start from the realtime object detector starter-app provided and add the logi
 ### Text-to-speech
 The prototype utilizes the Google Text-to-Speech python library to generate the sound reponse in '.mp3' version.
 https://pypi.org/project/gTTS/
+
 The '.mp3' file is then turned into '.wav' file via the pydub library for playing.
 https://pypi.org/project/pydub/
 
@@ -42,7 +43,8 @@ The time of the hackathon is limited so we have to take many options of expedien
 ### Unable to detect the accurate distance
 The best solution of this device is to use 2 cameras and calculate the distance of objects via parallex effect. However, to make a quick prototype, we have to accomadate the pre-trained models we were provided.
 
-### Incompatibility of 
+### Lack of compiled OpenAL binaries
+Unfortunately, OpenAL doesn't provide binaries for platforms other than Windows.
 
 ## Accomplishments that we're proud of
 

@@ -50,7 +50,7 @@ Unfortunately, OpenAL doesn't provide binaries for platforms other than Windows.
 We have a clear distribution of work that focuses on each team member's strength.
 
 ## What we learned
-How t use the new APIs w found and time management skills.
+How to use the new APIs w found and time management skills.
 
 ## What's next for Third Eye
 We would first switch to a device with dual-camera. A new Neural Network will be trained from scratch with the data collected or hopefully with new training sets found online.

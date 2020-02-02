@@ -23,7 +23,7 @@ def make_sounds(items):
     print("Frame with these items: " + str([item.label for item in items]))
 
     for item in items:
-        label = item.label
+        label = item.label.strip()
         position = item.box.center
         area = item.box.area
 

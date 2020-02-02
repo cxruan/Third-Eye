@@ -5,6 +5,7 @@ from tts import make_sounds
 import os
 from multiprocessing import Process, Queue
 import cv2
+from voice_recognition import voice_recognition
 
 """
 Use object detection to detect objects in the frame in realtime. The
@@ -29,10 +30,20 @@ def make_sound_worker(q):
         make_sounds(data)
 
 
+def find_things_worker(q, labels):
+    while True:
+        data = q.get()
+        if not data:
+            break
+        word = voice_recognition(labels)
+        items = [item for item in data if item.label.strip() == word]
+        make_sounds(items)
+
+
 def main():
 
     obj_detect = edgeiq.ObjectDetection(
-        "alwaysai/mobilenet_ssd")
+        "alwaysai/ssd_mobilenet_v2_coco_2018_03_29")
     obj_detect.load(engine=edgeiq.Engine.DNN)
 
     print("Loaded model:\n{}\n".format(obj_detect.model_id))
@@ -42,7 +53,8 @@ def main():
 
     fps = edgeiq.FPS()
 
-    q = Queue()
+    read_q = Queue()
+    find_q = Queue()
 
     captured_frame = cv2.imread(empty_image_path, cv2.IMREAD_COLOR)
     text = 'No objects yet...'
@@ -51,10 +63,18 @@ def main():
         with edgeiq.WebcamVideoStream(cam=0) as video_stream:
             # Allow Webcam to warm up
             time.sleep(2.0)
-            fps.start()
+            
 
-            worker = Process(target=make_sound_worker, args=(q,))
-            worker.start()
+            read_worker = Process(target=make_sound_worker, args=(read_q,))
+            read_worker.start()
+
+            find_worker = Process(target=find_things_worker,
+                                  args=(find_q, obj_detect.labels))
+            find_worker.start()
+
+            time.sleep(2.0)
+
+            fps.start()
 
             # loop detection
             while True:
@@ -76,10 +96,20 @@ def main():
                     captured_frame = frame
 
                     items = results.predictions
-                    long_text = ", ".join([item.label for item in items])
-                    text = long_text if len(long_text) <= 70 else long_text[:70] + "..."
+                    long_text = ", ".join([item.label.strip() for item in items])
+                    text = long_text if len(
+                        long_text) <= 70 else long_text[:70] + "..."
 
-                    q.put(items)
+                    read_q.put(items)
+                elif key == ord('f'):
+                    captured_frame = frame
+
+                    items = results.predictions
+                    long_text = ", ".join([item.label.strip() for item in items])
+                    text = long_text if len(
+                        long_text) <= 70 else long_text[:70] + "..."
+
+                    find_q.put(items)
 
                 panel = cv2.hconcat([frame, captured_frame])
 
@@ -93,7 +123,9 @@ def main():
 
     finally:
         fps.stop()
-        q.put(None)
+        read_q.put(None)
+        find_q.put(None)
+
         print("elapsed time: {:.2f}".format(fps.get_elapsed_seconds()))
         print("approx. FPS: {:.2f}".format(fps.compute_fps()))
 

@@ -3,6 +3,7 @@
     "start": "python app.py"
   },
   "models": {
-    "alwaysai/mobilenet_ssd": 3
+    "alwaysai/mobilenet_ssd": 3,
+    "alwaysai/ssd_mobilenet_v2_coco_2018_03_29": 1
   }
 }

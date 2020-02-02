@@ -6,6 +6,8 @@ import os
 from multiprocessing import Process, Queue
 import cv2
 from voice_recognition import voice_recognition
+from pydub.playback import play
+from pydub import AudioSegment
 
 """
 Use object detection to detect objects in the frame in realtime. The
@@ -19,13 +21,16 @@ https://dashboard.alwaysai.co/docs/application_development/changing_the_engine_a
 """
 
 os.environ["PYAL_DLL_PATH"] = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC"
-empty_image_path = "C:\\Users\\Yichi Yang\\Documents\\Others\\HackSC\\HackSC-2020\\realtime_object_detector\\empty.png"
+empty_image_path = "C:\\Users\\Yichi Yang\\Documents\\Others\\HackSC\\HackSC-2020\\empty.png"
+help_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\audio\\help.mp3"
+
+help_audio = AudioSegment.from_mp3(help_path) - 20
 
 
 def make_sound_worker(q):
     while True:
         data = q.get()
-        if not data:
+        if data is None:
             break
         make_sounds(data)
 
@@ -33,11 +38,19 @@ def make_sound_worker(q):
 def find_things_worker(q, labels):
     while True:
         data = q.get()
-        if not data:
+        if data is None:
             break
         word = voice_recognition(labels)
         items = [item for item in data if item.label.strip() == word]
-        make_sounds(items)
+        make_sounds(items, True)
+
+
+def play_audio_worker(q):
+    while True:
+        data = q.get()
+        if data is None:
+            break
+        play(data)
 
 
 def main():
@@ -55,6 +68,7 @@ def main():
 
     read_q = Queue()
     find_q = Queue()
+    audio_q = Queue()
 
     captured_frame = cv2.imread(empty_image_path, cv2.IMREAD_COLOR)
     text = 'No objects yet...'
@@ -63,7 +77,6 @@ def main():
         with edgeiq.WebcamVideoStream(cam=0) as video_stream:
             # Allow Webcam to warm up
             time.sleep(2.0)
-            
 
             read_worker = Process(target=make_sound_worker, args=(read_q,))
             read_worker.start()
@@ -72,16 +85,16 @@ def main():
                                   args=(find_q, obj_detect.labels))
             find_worker.start()
 
+            play_worker = Process(target=play_audio_worker,
+                                  args=(audio_q,))
+            play_worker.start()
+
             time.sleep(2.0)
 
             fps.start()
 
             # loop detection
             while True:
-
-                # if items:
-                #     make_sounds(items)
-                #     items = None
 
                 frame = video_stream.read()
                 results = obj_detect.detect_objects(frame, confidence_level=.5)
@@ -92,24 +105,38 @@ def main():
                 triggered = False
                 if key == ord('q'):
                     break
-                elif key == ord(' '):
+                elif key == ord('s'):
                     captured_frame = frame
 
                     items = results.predictions
-                    long_text = ", ".join([item.label.strip() for item in items])
-                    text = long_text if len(
-                        long_text) <= 70 else long_text[:70] + "..."
+                    long_text = ", ".join([item.label.strip()
+                                           for item in items])
+                    if not long_text:
+                        text = "Nothing Found"
+                    elif len(long_text) <= 70:
+                        text = long_text
+                    else:
+                        text = long_text[:70] + "..."
 
                     read_q.put(items)
+
                 elif key == ord('f'):
                     captured_frame = frame
 
                     items = results.predictions
-                    long_text = ", ".join([item.label.strip() for item in items])
-                    text = long_text if len(
-                        long_text) <= 70 else long_text[:70] + "..."
+                    long_text = ", ".join([item.label.strip()
+                                           for item in items])
+                    if not long_text:
+                        text = "Nothing Found"
+                    elif len(long_text) <= 70:
+                        text = long_text
+                    else:
+                        text = long_text[:70] + "..."
 
                     find_q.put(items)
+                elif key == ord('h'):
+                    audio_q.put(help_audio)
+                    text = "Reading instructions..."
 
                 panel = cv2.hconcat([frame, captured_frame])
 
@@ -117,7 +144,15 @@ def main():
                     panel, 10, 100, 10, 10, cv2.BORDER_CONSTANT, value=[255, 255, 255])
                 panel = cv2.putText(panel, text, (10, 550),
                                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.imshow('Super Cool App', panel)
+                panel = cv2.putText(panel, "Real Time", (22, 36),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+                panel = cv2.putText(panel, "Real Time", (20, 35),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
+                panel = cv2.putText(panel, "Captured", (672, 36),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+                panel = cv2.putText(panel, "Captured", (670, 35),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.imshow('Third Eye Demo', panel)
 
                 fps.update()
 
@@ -125,6 +160,7 @@ def main():
         fps.stop()
         read_q.put(None)
         find_q.put(None)
+        audio_q.put(None)
 
         print("elapsed time: {:.2f}".format(fps.get_elapsed_seconds()))
         print("approx. FPS: {:.2f}".format(fps.compute_fps()))

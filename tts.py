@@ -8,7 +8,7 @@ import wave
 import contextlib
 import math
 
-temp_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\realtime_object_detector\\temp_audio"
+temp_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\\HackSC-2020\\temp_audio"
 
 frame_width = 640
 frame_height = 480

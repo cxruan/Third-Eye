@@ -1,17 +1,22 @@
 import speech_recognition as sr
+from pydub.playback import play
+from pydub import AudioSegment
 
 # labels of the pretrained data set
 LABELS = ['person', 'bottle']
 
+beep_path = "C:\\Users\\YICHIY~1\\Documents\\Others\\HackSC\HackSC-2020\\audio\\beep-06.wav"
+beep = AudioSegment.from_wav(beep_path) - 24
+
 # obtain audio from the microphone
-
-
 def voice_recognition(labels):
     labels = [label.strip() for label in labels] if labels else LABELS
 
     r = sr.Recognizer()
+    r.energy_threshold = 600
     with sr.Microphone(device_index=0) as source:
-        print("Speak the object")
+        print("Say something...")
+        play(beep)
         audio = r.listen(source, phrase_time_limit=2)
 
     # recognize speech using Google Speech Recognition

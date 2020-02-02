@@ -52,6 +52,9 @@ Unfortunately, OpenAL doesn't provide binaries for platforms other than Windows.
 
 ## What's next for Third Eye
 We would first switch to a device with dual-camera. A new Neural Network will be trained from scratch with the data collected or hopefully with new training sets found online.
+
 More computation should be transferred to the cloud for better performance and less burden to the edge devices.
+
 A localized version of language recognition logic would be provided as alternative so that object detection may be provided even when being unable to connect to the Internet.
+
 A sonar may be added to the device as well, providing supplemental object detect support in dark environment.

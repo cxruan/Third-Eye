@@ -1,3 +1,6 @@
+// The file is used to communicate with arduino through serial port
+// send servo rotation data to the arduino to control the servo, and ultrasound will take a distance data and send back
+
 from serial import Serial
 
 def serial_ultrasound_control(input,port):
@@ -11,5 +14,5 @@ def serial_ultrasound_control(input,port):
 port ='/dev/cu.usbmodem143401'
 input_angle = 20
 ultra_reading = serial_ultrasound_control(input_angle,port);
-
+print(ultra_reading)
 

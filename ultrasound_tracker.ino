@@ -2,8 +2,8 @@
 
 int triggerPin = 7; //triggering on pin 7
 int echoPin = 8;    //echo on pin 8
-int info = 20;
-int old_info = 20;
+int info = 0; //  default valu of servo angle
+int old_info = 0; // To restore the old servo angle
 Servo myservo;
 
 
@@ -31,7 +31,7 @@ void sensor() { //loop
     delayMicroseconds(200);
     digitalWrite(triggerPin, LOW);
     duration = pulseIn(echoPin, HIGH); 
-    distance = (duration / 2) / 29.1; 
+    distance = (duration / 2) / 29.1;   // calculate the distance using formula
     Serial.print(distance); 
     Serial.print('cm'); 
     Serial.print('\n'); 
